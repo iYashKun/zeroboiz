@@ -184,9 +184,9 @@
             
             let url = `${API_BASE}/api/inbox`;
             if (isRandom) {
-                url += `&type=random`;
+                url += `?type=random`;
             } else {
-                url += `&username=${encodeURIComponent(username)}`;
+                url += `?username=${encodeURIComponent(username)}`;
             }
 
             try {
