@@ -182,7 +182,7 @@
             
             mailListContainer.innerHTML = '<div class="text-center text-blue-400 py-8 text-sm"><div class="loader ease-linear rounded-full border-2 border-t-2 border-slate-700 h-6 w-6 mx-auto mb-2"></div>Loading mailbox...</div>';
             
-            let url = `${API_BASE}/api/inbox?domain=${currentDomain}`;
+            let url = `${API_BASE}/api/inbox`;
             if (isRandom) {
                 url += `&type=random`;
             } else {
@@ -235,7 +235,7 @@
             document.getElementById('mail-body').innerHTML = '<div class="text-center text-blue-400 py-12"><div class="loader ease-linear rounded-full border-2 border-t-2 border-slate-700 h-6 w-6 mx-auto mb-2"></div>Decrypting contents...</div>';
 
             try {
-                const res = await fetch(`${API_BASE}/api/mail/${mailId}?username=${encodeURIComponent(activeUsername)}&domain=${currentDomain}`, {
+                const res = await fetch(`${API_BASE}/api/mail/${mailId}?username=${encodeURIComponent(activeUsername)}`, {
                     headers: { 'X-CSRFAuth-Token': csrfAuthToken }
                 });
                 const data = await res.json();
