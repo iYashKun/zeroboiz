@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>micx API Docs</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #050816;
+      --panel: rgba(9, 14, 31, 0.92);
+      --border: rgba(255, 255, 255, 0.14);
+      --text: #f4f7ff;
+      --muted: #9eadc9;
+      --accent: #7c9cff;
+      --accent-2: #31d4b0;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, "Segoe UI", system-ui, sans-serif;
+      line-height: 1.7;
+      color: var(--text);
+      background: radial-gradient(circle at top, #1d2d5c 0%, var(--bg) 70%);
+      padding: 24px;
+    }
+
+    .shell {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 28px;
+      border-radius: 28px;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(16px);
+    }
+
+    h1, h2 { margin-top: 0; }
+    h1 { font-size: 2rem; margin-bottom: 10px; }
+    h2 { font-size: 1.25rem; margin-bottom: 10px; color: #dce8ff; }
+    p, li { color: var(--muted); }
+
+    .hero {
+      border-radius: 18px;
+      padding: 18px 20px;
+      background: linear-gradient(135deg, rgba(124, 156, 255, 0.2), rgba(49, 212, 176, 0.2));
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 20px;
+    }
+
+    code, pre {
+      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+    }
+
+    code { padding: 2px 6px; }
+    pre { overflow: auto; padding: 14px; }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; }
+    th, td { border: 1px solid rgba(255,255,255,0.1); padding: 10px; text-align: left; }
+    th { background: rgba(255,255,255,0.06); }
+    section + section { margin-top: 28px; }
+
+    .pill-row { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0 16px; }
+    .pill {
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: rgba(124, 156, 255, 0.16);
+      color: #dce8ff;
+      border: 1px solid rgba(124, 156, 255, 0.2);
+      font-size: 0.95rem;
+    }
+
+    a { color: #9ec1ff; }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="hero">
+      <h1>micx browser microphone API docs</h1>
+      <p>micx gives you a polished way to inspect live microphone health, voice activity, and spectral data from the browser.</p>
+    </div>
+
+    <section>
+      <h2>Getting started</h2>
+      <p>Import the module, request a stream, and create the API wrapper.</p>
+      <pre><code>import MicrophoneAPI from './browser/microphone-api.js';
+
+const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+const mic = new MicrophoneAPI(stream);
+</code></pre>
+    </section>
+
+    <section>
+      <h2>Quick examples</h2>
+      <pre><code>const profile = await mic.calibrate(3);
+console.log('Calibration:', profile);
+
+mic.startRealtime((data) => {
+  console.log('Live frame:', data);
+});
+
+mic.stopRealtime();
+</code></pre>
+    </section>
+
+    <section>
+      <h2>Why the “Requested device not found” error appears</h2>
+      <div class="pill-row">
+        <span class="pill">No mic connected</span>
+        <span class="pill">Browser permission blocked</span>
+        <span class="pill">Selected input unavailable</span>
+      </div>
+      <p>The demo now retries with simpler constraints and shows clearer fallback messages. If your browser still cannot find an input, connect a microphone or choose a different input from the browser permission dialog.</p>
+    </section>
+
+    <section>
+      <h2>Constructor</h2>
+      <p><code>new MicrophoneAPI(stream, config)</code></p>
+      <ul>
+        <li><code>analyserFftSize</code> (default <code>2048</code>)</li>
+        <li><code>captureIntervalMs</code> (default <code>50</code>)</li>
+        <li><code>vadThreshold</code> (default <code>0.03</code>)</li>
+        <li><code>vadSilenceFrames</code> (default <code>5</code>)</li>
+        <li><code>clippingThreshold</code> (default <code>0.98</code>)</li>
+        <li><code>noiseFloorMultiplier</code> (default <code>1.8</code>)</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Methods</h2>
+      <ul>
+        <li><code>calibrate(seconds)</code> — samples ambient noise and returns a calibration profile.</li>
+        <li><code>analyzeFrame()</code> — returns one snapshot of audio metrics.</li>
+        <li><code>startRealtime(callback)</code> — streams metric frames continuously.</li>
+        <li><code>stopRealtime()</code> — stops the realtime loop.</li>
+        <li><code>getDeviceInfo()</code> — returns device metadata and permission state.</li>
+        <li><code>explain()</code> — returns supported metric capabilities.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Live data fields</h2>
+      <table>
+        <thead>
+          <tr><th>Field</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>inputLevel</code></td><td>Instantaneous amplitude estimate from the time domain.</td></tr>
+          <tr><td><code>peakLevel</code></td><td>Maximum absolute sample value in the current buffer.</td></tr>
+          <tr><td><code>rmsLevel</code></td><td>Root mean square energy for loudness and voice activity detection.</td></tr>
+          <tr><td><code>noiseFloor</code></td><td>Estimated noise floor from calibration.</td></tr>
+          <tr><td><code>speechProbability</code></td><td>Confidence that speech is present.</td></tr>
+          <tr><td><code>pitch</code></td><td>Estimated dominant pitch in Hertz.</td></tr>
+          <tr><td><code>roomScore</code></td><td>Simple room-quality estimate from spectral content.</td></tr>
+          <tr><td><code>frequencySpectrum</code></td><td>FFT magnitudes for the analyzer bins.</td></tr>
+          <tr><td><code>dominantFrequency</code></td><td>Peak frequency in the current spectrum.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Agent guide</h2>
+      <p>For repository-aware instructions, see <a href="/guide">the guide page</a> or the local file <code>GUIDE.md</code>.</p>
+    </section>
+
+    <p><a href="/">Back to demo</a></p>
+  </div>
+</body>
+</html>
