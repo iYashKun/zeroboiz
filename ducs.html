@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Captcha API | Documentation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --text: #0f172a;
+            --text-light: #64748b;
+            --bg: #ffffff;
+            --surface: #f8fafc;
+            --border: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        /* HEADER */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 72px;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 32px;
+            z-index: 1100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            font-size: 1.65rem;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .nav-right {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .search-container {
+            position: relative;
+            width: 360px;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 12px 20px 12px 48px;
+            border: 1.5px solid var(--border);
+            border-radius: 9999px;
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+
+        .search-container input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            position: fixed;
+            top: 72px;
+            left: 0;
+            bottom: 0;
+            width: 300px;
+            background: var(--bg);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            padding: 32px 20px;
+            z-index: 1000;
+        }
+
+        .sidebar h3 {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 16px;
+            padding-left: 12px;
+        }
+
+        .toc a {
+            display: flex;
+            align-items: center;
+            padding: 10px 16px;
+            color: var(--text);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .toc a:hover {
+            background: var(--surface);
+            color: var(--primary);
+        }
+
+        .toc a.active {
+            background: #f0f0ff;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* MAIN CONTENT */
+        .main {
+            margin-left: 300px;
+            padding: 80px 60px 100px;
+            max-width: 860px;
+        }
+
+        .hero {
+            margin-bottom: 60px;
+        }
+
+        .hero h1 {
+            font-size: 3.2rem;
+            line-height: 1.1;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .hero .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-light);
+            max-width: 560px;
+        }
+
+        .api-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #ecfdf5;
+            color: #10b981;
+            padding: 6px 16px;
+            border-radius: 9999px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-top: 20px;
+        }
+
+        section {
+            margin-bottom: 80px;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 3px solid var(--primary);
+            color: var(--text);
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            margin: 40px 0 16px;
+            color: var(--text);
+        }
+
+        .endpoint-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            margin: 28px 0;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .endpoint-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px -10px rgba(79, 70, 229, 0.15);
+        }
+
+        .method {
+            display: inline-block;
+            padding: 4px 14px;
+            background: #4f46e5;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border-radius: 6px;
+            margin-bottom: 12px;
+        }
+
+        pre {
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 28px;
+            border-radius: 16px;
+            overflow-x: auto;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin: 20px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+            background: white;
+        }
+
+        th {
+            background: #f8fafc;
+            padding: 16px 20px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text);
+            border-bottom: 2px solid var(--border);
+        }
+
+        td {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 60px 20px 40px;
+            color: var(--text-light);
+            border-top: 1px solid var(--border);
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .main {
+                margin-left: 0;
+                padding: 80px 24px 80px;
+            }
+            .hero h1 {
+                font-size: 2.6rem;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Space+Grotesk:wght@500;600&amp;display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="header">
+        <a href="#" class="logo">
+            <i class="fas fa-shield-halved"></i>
+            <span>Captcha API</span>
+        </a>
+
+        <div class="nav-right">
+            <div class="search-container">
+                <i class="fas fa-search" style="position:absolute;left:20px;top:14px;color:#94a3b8;"></i>
+                <input type="text" id="searchInput" placeholder="Search documentation...">
+            </div>
+            <button onclick="toggleSidebar()" style="background:none;border:none;font-size:1.6rem;cursor:pointer;color:#64748b;">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- SIDEBAR -->
+    <nav class="sidebar" id="sidebar">
+        <h3>Documentation</h3>
+        <div class="toc">
+            <a href="#overview" class="active">Overview</a>
+            <a href="#authentication">Authentication</a>
+            <a href="#endpoints">Endpoints</a>
+            <a href="#response-codes">Response Codes</a>
+            <a href="#examples">Code Examples</a>
+            <a href="#security">Security</a>
+            <a href="#troubleshooting">Troubleshooting</a>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+        <div class="hero">
+            <h1>Captcha API</h1>
+            <p class="subtitle">Secure, fast, and production-ready CAPTCHA service with enterprise-grade security.</p>
+            <div class="api-badge">
+                <i class="fas fa-check-circle"></i>
+                v2.0 • Production Ready
+            </div>
+        </div>
+
+        <section id="overview">
+            <h2>Overview</h2>
+            <p>A modern CAPTCHA solution built for developers who need maximum security with minimal friction.</p>
+            <ul style="margin: 24px 0; padding-left: 20px; font-size: 1.1rem;">
+                <li>JWT-based authentication with IP locking</li>
+                <li>3-attempt limit per token</li>
+                <li>Secure HttpOnly cookies</li>
+                <li>Full security headers</li>
+                <li>AWS Lambda ready</li>
+            </ul>
+        </section>
+
+        <section id="endpoints">
+            <h2>Endpoints</h2>
+
+            <div class="endpoint-card">
+                <div class="method">GET</div>
+                <h3>/captcha.rb — Generate CAPTCHA</h3>
+                <p>Creates a new CAPTCHA challenge and returns tokens + image data.</p>
+            </div>
+
+            <div class="endpoint-card">
+                <div class="method">GET</div>
+                <h3>/captcha.rb?png=TOKEN — View Image</h3>
+            </div>
+
+            <div class="endpoint-card">
+                <div class="method">GET</div>
+                <h3>/captcha.rb?verify=TOKEN&amp;captcha=ANSWER — Verify</h3>
+            </div>
+        </section>
+
+        <section id="examples">
+            <h2>Code Examples</h2>
+            <h3>JavaScript (Recommended)</h3>
+            <pre><code>async function generateCaptcha() {
+  const res = await fetch('/captcha.rb');
+  const data = await res.json();
+  document.getElementById('captcha-image').src = data.data;
+}</code></pre>
+        </section>
+
+        <section id="security">
+            <h2>Security First</h2>
+            <p>Built with defense-in-depth. Every request is validated against IP, expiry, and attempt limits.</p>
+        </section>
+
+        <div class="footer">
+            <p><strong>Captcha API Documentation</strong> • Last updated July 2026</p>
+        </div>
+    </main>
+
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // Active link highlighting
+        document.querySelectorAll('.toc a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                document.querySelectorAll('.toc a').forEach(a => a.classList.remove('active'));
+                this.classList.add('active');
+                
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth' });
+                
+                if (window.innerWidth < 769) {
+                    document.getElementById('sidebar').classList.remove('open');
+                }
+            });
+        });
+
+        // Search
+        document.getElementById('searchInput').addEventListener('keyup', function(e) {
+            const term = e.target.value.toLowerCase();
+            document.querySelectorAll('.toc a').forEach(link => {
+                link.style.display = link.textContent.toLowerCase().includes(term) ? 'flex' : 'none';
+            });
+        });
+
+        console.log('%cCaptcha API Documentation — Professional Edition', 'color:#4f46e5;font-size:15px;font-weight:700');
+    </script>
+</body>
+</html>
