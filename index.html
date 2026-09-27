@@ -20,6 +20,8 @@
   --muted: #6b6b8d;
   --warm: #FFDDA5;
   --cool: #BBDFFF;
+  --warm-strong: #e6a817;
+  --cool-strong: #4a9fd4;
   --warm-weak: color-mix(in oklab, var(--warm) 18%, var(--bg));
   --cool-weak: color-mix(in oklab, var(--cool) 18%, var(--bg));
   --warm-mid: color-mix(in oklab, var(--warm) 45%, var(--bg));
@@ -39,6 +41,12 @@
   --step-3: clamp(2.2rem, 1.7rem + 2.5vw, 4.2rem);
   --step-4: clamp(3rem, 2.2rem + 4vw, 6rem);
   --space: clamp(1.5rem, 1.2rem + 1.5vw, 3rem);
+}
+
+/* ===== Responsive Container ===== */
+.container {
+  width: min(1180px, calc(100% - 48px));
+  margin-inline: auto;
 }
 
 /* ===== Reset & Base ===== */
@@ -964,6 +972,196 @@ body::before {
   .timeline-dot { left: 2px; width: 20px; height: 20px; }
 }
 
+/* ===== Enhanced Responsive System ===== */
+.nav-mobile-cta { display: none; }
+
+.menu-toggle {
+  display: none;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  box-shadow: var(--shadow-soft);
+}
+.menu-toggle span {
+  width: 19px;
+  height: 2px;
+  border-radius: 99px;
+  background: var(--ink);
+  transition: transform .25s ease, opacity .25s ease;
+}
+.menu-toggle.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.menu-toggle.active span:nth-child(2) { opacity: 0; }
+.menu-toggle.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+@media (max-width: 1100px) {
+  .container { width: min(100% - 40px, 1000px); }
+  .hero .container { gap: 2.5rem; }
+  .hero-pfp-wrap { width: 280px; height: 280px; }
+  .hero-float-card.fc1 { right: -4px; }
+  .hero-float-card.fc2 { left: -8px; }
+  .skills-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 900px) {
+  .container { width: min(100% - 32px, 720px); }
+  .header .container { height: 68px; }
+  .header-cta { display: none; }
+  .menu-toggle { display: flex; z-index: 102; }
+
+  .nav {
+    position: fixed;
+    top: 76px;
+    left: 16px;
+    right: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    padding: 10px;
+    background: rgba(255,255,255,.92);
+    backdrop-filter: blur(24px) saturate(1.8);
+    -webkit-backdrop-filter: blur(24px) saturate(1.8);
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    box-shadow: var(--shadow-medium);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-12px) scale(.98);
+    pointer-events: none;
+    transition: opacity .25s ease, transform .25s ease, visibility .25s ease;
+  }
+  .nav.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+  }
+  .nav a {
+    width: 100%;
+    padding: .85rem 1rem;
+    border-radius: 14px;
+    font-size: .95rem;
+  }
+  .nav-mobile-cta {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: .45rem;
+    margin-top: 4px;
+    background: var(--ink);
+    color: var(--bg) !important;
+  }
+
+  .hero {
+    min-height: auto;
+    padding: 120px 0 72px;
+  }
+  .hero .container {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 2.5rem;
+  }
+  .hero-visual { order: -1; }
+  .hero-pfp-wrap { width: 250px; height: 250px; }
+  .hero-float-card { display: none; }
+  .hero-badge { margin: 0 auto 1.25rem; }
+  .hero-role, .hero-actions, .hero-socials { justify-content: center; }
+  .hero-desc { margin-inline: auto; }
+  .hero-title { font-size: clamp(3.5rem, 13vw, 5.5rem); }
+
+  .about-grid, .contact-grid { grid-template-columns: 1fr; }
+  .about-content { text-align: center; }
+  .about-content .section-label { justify-content: center; }
+  .about-content .section-label::before { display: none; }
+  .about-quote { text-align: left; }
+  .skills-grid { grid-template-columns: repeat(2, 1fr); }
+  .form-row { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px) {
+  :root {
+    --radius: 20px;
+    --radius-lg: 24px;
+    --radius-sm: 13px;
+  }
+  .container { width: min(100% - 24px, 560px); }
+  .header .container { height: 64px; }
+  .logo { font-size: 1.4rem; }
+  .nav { top: 72px; left: 12px; right: 12px; }
+
+  .hero { padding: 104px 0 56px; }
+  .hero-pfp-wrap { width: 190px; height: 190px; }
+  .hero-pfp-ring { inset: -10px; }
+  .hero-pfp-ring2 { inset: -20px; }
+  .hero-title { font-size: clamp(3rem, 16vw, 4.4rem); }
+  .hero-role { font-size: 1.05rem; gap: .5rem; }
+  .hero-desc { font-size: .96rem; line-height: 1.7; }
+  .hero-actions { flex-direction: column; width: 100%; gap: .75rem; }
+  .hero-actions .btn { width: 100%; min-height: 50px; }
+  .hero-socials { margin-top: -.25rem; }
+  .social-btn { width: 46px; height: 46px; }
+
+  .marquee-section { padding: 1.15rem 0; }
+  .marquee-track { gap: 2rem; }
+  .marquee-item { font-size: .8rem; }
+
+  .about, .skills, .experience { padding: 72px 0; }
+  .contact { padding: 72px 0 40px; }
+  .about-content h2, .skills-header h2, .experience-header h2, .contact-info h2 {
+    font-size: clamp(2.25rem, 10vw, 3.3rem);
+  }
+  .about-content p, .contact-info > p { font-size: .96rem; }
+  .about-card, .contact-form-wrap { padding: 1.25rem; }
+  .about-card-header { margin-bottom: 1.25rem; }
+  .about-stats-row { grid-template-columns: repeat(2, 1fr); gap: .7rem; }
+  .about-stat-item { padding: 1rem .8rem; }
+  .about-stat-item .stat-num { font-size: 1.35rem; }
+  .about-stat-item .stat-desc { font-size: .72rem; }
+
+  .skills-grid { grid-template-columns: 1fr; gap: .85rem; }
+  .skill-card { padding: 1.25rem; }
+  .skill-card-header { margin-bottom: 1rem; }
+  .skill-icon-wrap { width: 46px; height: 46px; border-radius: 13px; font-size: 1.35rem; }
+
+  .timeline::before { left: 11px; }
+  .timeline-item { padding-left: 38px; padding-bottom: 1.5rem; }
+  .timeline-dot { left: 1px; width: 22px; height: 22px; }
+  .timeline-card { padding: 1.15rem; }
+  .timeline-card-header { display: block; }
+  .timeline-card h3 { font-size: 1.05rem; margin-bottom: .55rem; }
+  .timeline-date { font-size: .72rem; }
+  .timeline-desc { font-size: .88rem; }
+
+  .contact-links { gap: .7rem; }
+  .contact-link { padding: .9rem; gap: .8rem; }
+  .contact-link-icon { width: 44px; height: 44px; }
+  .contact-link-text { font-size: .9rem; }
+  .contact-link-sub { font-size: .72rem; overflow-wrap: anywhere; }
+  .form-group { margin-bottom: .9rem; }
+  .form-group input, .form-group textarea { font-size: 16px; padding: .85rem .95rem; }
+  .form-group textarea { min-height: 130px; }
+  .contact-form-wrap .btn { min-height: 50px; }
+
+  .footer { padding: 2rem 0; }
+  .footer p { font-size: .76rem; line-height: 1.6; }
+}
+
+@media (max-width: 380px) {
+  .container { width: min(100% - 20px, 360px); }
+  .hero-pfp-wrap { width: 170px; height: 170px; }
+  .about-stats-row { grid-template-columns: 1fr 1fr; }
+  .about-stat-item { padding: .8rem .6rem; }
+  .about-stat-item .stat-icon { width: 34px; height: 34px; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .reveal { opacity: 1; transform: none; }
@@ -987,16 +1185,23 @@ body::before {
 <header class="header">
   <div class="container">
     <a href="#" class="logo">Yash<span class="logo-dot"></span></a>
-    <nav class="nav">
+    <nav class="nav" id="mainNav" aria-label="Primary navigation">
       <a href="#about">About</a>
       <a href="#skills">Skills</a>
       <a href="#experience">Experience</a>
       <a href="#contact">Contact</a>
+      <a href="#contact" class="nav-mobile-cta">
+        <span class="iconify" data-icon="heroicons:paper-airplane"></span>
+        Hire Me
+      </a>
     </nav>
     <a href="#contact" class="header-cta">
       <span class="iconify" data-icon="heroicons:paper-airplane"></span>
       Hire Me
     </a>
+    <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mainNav">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </header>
 
@@ -1360,6 +1565,35 @@ body::before {
 
 <!-- Scroll Reveal Script -->
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// Mobile navigation
+const menuToggle = document.getElementById('menuToggle');
+const mainNav = document.getElementById('mainNav');
+
+if (menuToggle && mainNav) {
+  const closeMenu = () => {
+    menuToggle.classList.remove('active');
+    mainNav.classList.remove('open');
+    menuToggle.setAttribute('aria-expanded', 'false');
+    menuToggle.setAttribute('aria-label', 'Open menu');
+  };
+
+  menuToggle.addEventListener('click', () => {
+    const open = !mainNav.classList.contains('open');
+    menuToggle.classList.toggle('active', open);
+    mainNav.classList.toggle('open', open);
+    menuToggle.setAttribute('aria-expanded', String(open));
+    menuToggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  });
+
+  mainNav.querySelectorAll('a').forEach(link => link.addEventListener('click', closeMenu));
+  document.addEventListener('click', event => {
+    if (mainNav.classList.contains('open') &&
+        !mainNav.contains(event.target) &&
+        !menuToggle.contains(event.target)) closeMenu();
+  });
+}
+
+// Scroll reveal
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
