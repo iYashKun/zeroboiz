@@ -1,305 +1,1389 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ZEROBOIZ CLUB — Allowlist</title>
-  <meta name="description" content="Exclusive allowlist application for ZEROBOIZ Club. For the misfits only.">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yash - Full Stack Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
 
-  <!-- Open Graph / Twitter Card -->
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://zeroboiz.club/">
-  <meta property="og:title" content="ZEROBOIZ CLUB — Misfit Pass">
-  <meta property="og:description" content="I just applied for @ZeroBoizClub WL. Early supporters get priority. Secure your spot before it closes.">
-  <meta property="og:image" content="https://zeroboiz.club/misfit-pass.jpg">
-  <meta property="og:image:width" content="1080">
-  <meta property="og:image:height" content="1080">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:site" content="@ZeroBoizClub">
-  <meta name="twitter:title" content="ZEROBOIZ CLUB — Misfit Pass">
-  <meta name="twitter:description" content="Early supporters get priority. Secure your spot before it closes.">
-  <meta name="twitter:image" content="https://zeroboiz.club/misfit-pass.jpg">
+<style>
+/* ===== Design Tokens ===== */
+:root {
+  --bg: #FFFBF5;
+  --surface: #FFFFFF;
+  --surface-glass: rgba(255,255,255,0.72);
+  --ink: #0f0f1a;
+  --ink-soft: #1e1e3f;
+  --muted: #6b6b8d;
+  --warm: #FFDDA5;
+  --cool: #BBDFFF;
+  --warm-weak: color-mix(in oklab, var(--warm) 18%, var(--bg));
+  --cool-weak: color-mix(in oklab, var(--cool) 18%, var(--bg));
+  --warm-mid: color-mix(in oklab, var(--warm) 45%, var(--bg));
+  --cool-mid: color-mix(in oklab, var(--cool) 45%, var(--bg));
+  --line: color-mix(in oklab, var(--ink) 6%, transparent);
+  --shadow-soft: 0 2px 8px rgba(0,0,0,0.04), 0 16px 40px -12px rgba(0,0,0,0.08);
+  --shadow-medium: 0 4px 16px rgba(0,0,0,0.06), 0 24px 56px -16px rgba(0,0,0,0.12);
+  --shadow-glow: 0 0 40px -10px color-mix(in oklab, var(--warm) 60%, transparent);
+  --radius: 24px;
+  --radius-lg: 32px;
+  --radius-sm: 14px;
+  --step--2: clamp(0.7rem, 0.68rem + 0.1vw, 0.8rem);
+  --step--1: clamp(0.8rem, 0.77rem + 0.15vw, 0.95rem);
+  --step-0: clamp(0.95rem, 0.9rem + 0.25vw, 1.1rem);
+  --step-1: clamp(1.15rem, 1.05rem + 0.5vw, 1.5rem);
+  --step-2: clamp(1.6rem, 1.35rem + 1.25vw, 2.6rem);
+  --step-3: clamp(2.2rem, 1.7rem + 2.5vw, 4.2rem);
+  --step-4: clamp(3rem, 2.2rem + 4vw, 6rem);
+  --space: clamp(1.5rem, 1.2rem + 1.5vw, 3rem);
+}
 
-  <link rel="stylesheet" href="https://zeroboiz.club/style.css">
+/* ===== Reset & Base ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: "Inter", "Hiragino Sans", "Yu Gothic", "Noto Sans JP", sans-serif;
+  font-size: var(--step-0);
+  line-height: 1.7;
+  color: var(--ink);
+  background: var(--bg);
+  overflow-x: hidden;
+}
+h1, h2, h3, h4 {
+  font-family: "Outfit", "Hiragino Sans", "Yu Gothic", "Noto Sans JP", sans-serif;
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+a { text-decoration: none; color: inherit; }
+ul { list-style: none; }
+img { max-width: 100%; display: block; }
+
+/* ===== Custom Scrollbar ===== */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: color-mix(in oklab, var(--warm) 70%, var(--cool)); border-radius: 100px; }
+
+/* ===== Noise Texture Overlay ===== */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  opacity: 0.025;
+  pointer-events: none;
+  z-index: 9999;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 200px;
+}
+
+/* ===== Header ===== */
+.header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  background: var(--surface-glass);
+  backdrop-filter: blur(20px) saturate(1.8);
+  -webkit-backdrop-filter: blur(20px) saturate(1.8);
+  border-bottom: 1px solid var(--line);
+}
+.header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 76px;
+}
+.logo {
+  font-family: "Outfit", sans-serif;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.logo .logo-dot {
+  width: 8px; height: 8px;
+  background: linear-gradient(135deg, var(--warm), var(--cool));
+  border-radius: 50%;
+  display: inline-block;
+}
+.nav {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+.nav a {
+  font-family: "Outfit", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--muted);
+  padding: 0.5rem 1.1rem;
+  border-radius: 100px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+.nav a:hover {
+  color: var(--ink);
+  background: var(--warm-weak);
+}
+.nav a.active {
+  color: var(--ink);
+  background: linear-gradient(135deg, var(--warm-weak), var(--cool-weak));
+}
+.header-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1.4rem;
+  font-family: "Outfit", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: var(--ink);
+  color: var(--bg);
+  border-radius: 100px;
+  transition: all 0.3s;
+}
+.header-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-medium);
+}
+
+/* ===== Hero ===== */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding-top: 76px;
+  position: relative;
+  overflow: hidden;
+}
+.hero-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  pointer-events: none;
+}
+.hero-blob.warm {
+  width: 600px; height: 600px;
+  background: var(--warm);
+  top: -150px; right: -180px;
+  opacity: 0.5;
+  animation: blobFloat1 8s ease-in-out infinite;
+}
+.hero-blob.cool {
+  width: 450px; height: 450px;
+  background: var(--cool);
+  bottom: -120px; left: -120px;
+  opacity: 0.45;
+  animation: blobFloat2 10s ease-in-out infinite;
+}
+.hero-blob.warm2 {
+  width: 300px; height: 300px;
+  background: var(--warm);
+  top: 40%; left: 30%;
+  opacity: 0.2;
+  animation: blobFloat3 12s ease-in-out infinite;
+}
+@keyframes blobFloat1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-30px, 20px) scale(1.08); }
+}
+@keyframes blobFloat2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(20px, -30px) scale(1.05); }
+}
+@keyframes blobFloat3 {
+  0%, 100% { transform: translate(0, 0); }
+  33% { transform: translate(15px, -15px); }
+  66% { transform: translate(-10px, 10px); }
+}
+.hero .container {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: calc(var(--space) * 1.5);
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem 0.5rem 0.6rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 100px;
+  font-family: "Outfit", sans-serif;
+  font-size: var(--step--2);
+  font-weight: 500;
+  color: var(--muted);
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow-soft);
+}
+.hero-badge .status-dot {
+  width: 8px; height: 8px;
+  background: #22c55e;
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px rgba(34,197,94,0.2);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+.hero-title {
+  font-size: var(--step-4);
+  font-weight: 800;
+  margin-bottom: 0.75rem;
+  line-height: 1.05;
+}
+.hero-title .gradient-text {
+  background: linear-gradient(135deg, #e6a817, #4a9fd4);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.hero-role {
+  font-family: "Outfit", sans-serif;
+  font-size: var(--step-1);
+  font-weight: 500;
+  color: var(--muted);
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+.hero-role .role-divider {
+  width: 32px; height: 2px;
+  background: linear-gradient(90deg, var(--warm-strong), var(--cool-strong));
+  border-radius: 2px;
+}
+.hero-desc {
+  color: var(--muted);
+  max-width: 480px;
+  margin-bottom: 2.25rem;
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 2.5rem;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.9rem 2rem;
+  font-family: "Outfit", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 100px;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  border: none;
+  position: relative;
+  overflow: hidden;
+}
+.btn-primary {
+  background: var(--ink);
+  color: var(--bg);
+  box-shadow: 0 4px 20px -4px rgba(15,15,26,0.35);
+}
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 32px -6px rgba(15,15,26,0.45);
+}
+.btn-outline {
+  background: transparent;
+  color: var(--ink);
+  border: 1.5px solid var(--line);
+}
+.btn-outline:hover {
+  border-color: var(--warm-strong);
+  background: var(--warm-weak);
+  transform: translateY(-3px);
+}
+.hero-socials {
+  display: flex;
+  gap: 0.75rem;
+}
+.social-btn {
+  width: 44px; height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  color: var(--muted);
+  font-size: 1.3rem;
+  transition: all 0.3s;
+}
+.social-btn:hover {
+  color: var(--ink);
+  border-color: var(--cool-strong);
+  background: var(--cool-weak);
+  transform: translateY(-3px) rotate(-4deg);
+  box-shadow: var(--shadow-soft);
+}
+
+/* Hero Visual */
+.hero-visual {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.hero-pfp-wrap {
+  position: relative;
+  width: 320px;
+  height: 320px;
+}
+.hero-pfp-ring {
+  position: absolute;
+  inset: -16px;
+  border-radius: 50%;
+  border: 2px dashed color-mix(in oklab, var(--warm) 50%, transparent);
+  animation: spin 25s linear infinite;
+}
+.hero-pfp-ring2 {
+  position: absolute;
+  inset: -32px;
+  border-radius: 50%;
+  border: 1.5px dashed color-mix(in oklab, var(--cool) 40%, transparent);
+  animation: spinReverse 30s linear infinite;
+}
+@keyframes spinReverse { to { transform: rotate(-360deg); } }
+.hero-pfp {
+  width: 100%; height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid var(--surface);
+  box-shadow: var(--shadow-medium);
+  position: relative;
+  z-index: 1;
+}
+.hero-float-card {
+  position: absolute;
+  background: var(--surface-glass);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: "Outfit", sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  box-shadow: var(--shadow-soft);
+  z-index: 2;
+}
+.hero-float-card.fc1 {
+  top: 10%; right: -10px;
+  animation: float1 5s ease-in-out infinite;
+}
+.hero-float-card.fc2 {
+  bottom: 15%; left: -20px;
+  animation: float2 6s ease-in-out infinite;
+}
+.hero-float-card.fc3 {
+  bottom: 5%; right: 10%;
+  animation: float3 7s ease-in-out infinite;
+}
+@keyframes float1 {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+@keyframes float2 {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(10px); }
+}
+@keyframes float3 {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  50% { transform: translateY(-8px) translateX(5px); }
+}
+.float-icon {
+  width: 32px; height: 32px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+.fc1 .float-icon { background: var(--warm-weak); }
+.fc2 .float-icon { background: var(--cool-weak); }
+.fc3 .float-icon { background: color-mix(in oklab, var(--warm) 30%, var(--cool)); }
+
+/* ===== Marquee ===== */
+.marquee-section {
+  padding: 1.5rem 0;
+  background: var(--ink);
+  overflow: hidden;
+  position: relative;
+}
+.marquee-track {
+  display: flex;
+  gap: 3rem;
+  animation: marquee 25s linear infinite;
+  width: max-content;
+}
+.marquee-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: "Outfit", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: rgba(255,255,255,0.6);
+  white-space: nowrap;
+}
+.marquee-item span[class*="iconify"] { font-size: 1.3rem; }
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ===== About ===== */
+.about {
+  padding: calc(var(--space) * 3) 0;
+  position: relative;
+}
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: calc(var(--space) * 2);
+  align-items: center;
+}
+.about-content .section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: "Outfit", sans-serif;
+  font-size: var(--step--2);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-bottom: 1rem;
+}
+.about-content .section-label::before {
+  content: "";
+  width: 28px; height: 2px;
+  background: linear-gradient(90deg, var(--warm-strong), var(--cool-strong));
+  border-radius: 2px;
+}
+.about-content h2 {
+  font-size: var(--step-3);
+  margin-bottom: 1.5rem;
+  line-height: 1.1;
+}
+.about-content p {
+  color: var(--muted);
+  margin-bottom: 1.25rem;
+  font-size: 1.05rem;
+  line-height: 1.85;
+}
+.about-quote {
+  margin-top: 2rem;
+  padding: 1.5rem 1.75rem;
+  background: linear-gradient(135deg, var(--warm-weak), var(--cool-weak));
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--warm-strong);
+  position: relative;
+}
+.about-quote::before {
+  content: "";
+  position: absolute;
+  top: -12px; left: 24px;
+  font-family: "Outfit", sans-serif;
+  font-size: 4rem;
+  color: var(--warm-strong);
+  opacity: 0.4;
+  line-height: 1;
+}
+.about-quote p {
+  font-family: "Outfit", sans-serif;
+  font-style: italic;
+  font-weight: 500;
+  color: var(--ink-soft);
+  margin: 0;
+  position: relative;
+  z-index: 1;
+}
+.about-visual {
+  position: relative;
+}
+.about-card {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem;
+  box-shadow: var(--shadow-soft);
+  border: 1px solid var(--line);
+}
+.about-card-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.about-card-avatar {
+  width: 56px; height: 56px;
+  border-radius: 16px;
+  object-fit: cover;
+}
+.about-card-info h4 {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+.about-card-info p {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.about-stats-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.about-stat-item {
+  padding: 1.25rem;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+  transition: all 0.3s;
+}
+.about-stat-item:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-soft);
+  border-color: var(--cool-mid);
+}
+.about-stat-item .stat-icon {
+  width: 40px; height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  margin-bottom: 0.75rem;
+}
+.about-stat-item:nth-child(1) .stat-icon { background: var(--warm-weak); }
+.about-stat-item:nth-child(2) .stat-icon { background: var(--cool-weak); }
+.about-stat-item:nth-child(3) .stat-icon { background: color-mix(in oklab, var(--warm) 30%, var(--cool)); }
+.about-stat-item:nth-child(4) .stat-icon { background: var(--cool-weak); }
+.about-stat-item .stat-num {
+  font-family: "Outfit", sans-serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: 0.25rem;
+}
+.about-stat-item .stat-desc {
+  font-size: 0.8rem;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+/* ===== Skills ===== */
+.skills {
+  padding: calc(var(--space) * 3) 0;
+  background: linear-gradient(180deg, transparent 0%, var(--cool-weak) 30%, var(--warm-weak) 70%, transparent 100%);
+  position: relative;
+}
+.skills-header {
+  text-align: center;
+  margin-bottom: calc(var(--space) * 1.5);
+}
+.skills-header .section-label {
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+.skills-header .section-label::before { display: none; }
+.skills-header .section-label::after {
+  content: "";
+  width: 28px; height: 2px;
+  background: linear-gradient(90deg, var(--warm-strong), var(--cool-strong));
+  border-radius: 2px;
+}
+.skills-header h2 {
+  font-size: var(--step-3);
+  margin-bottom: 0.75rem;
+}
+.skills-header p {
+  color: var(--muted);
+  max-width: 500px;
+  margin: 0 auto;
+}
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+.skill-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 2rem 1.75rem;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+.skill-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 3px;
+  background: linear-gradient(90deg, var(--warm), var(--cool));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.skill-card:hover::before { transform: scaleX(1); }
+.skill-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-medium);
+  border-color: transparent;
+}
+.skill-card-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+.skill-icon-wrap {
+  width: 52px; height: 52px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  transition: all 0.3s;
+  flex-shrink: 0;
+}
+.skill-card:nth-child(1) .skill-icon-wrap { background: var(--warm-weak); color: #c9870e; }
+.skill-card:nth-child(2) .skill-icon-wrap { background: var(--cool-weak); color: #2b7db5; }
+.skill-card:nth-child(3) .skill-icon-wrap { background: color-mix(in oklab, var(--warm) 25%, var(--cool)); color: #7a5ec0; }
+.skill-card:nth-child(4) .skill-icon-wrap { background: var(--cool-weak); color: #1a6fa3; }
+.skill-card:nth-child(5) .skill-icon-wrap { background: var(--warm-weak); color: #b8720d; }
+.skill-card:nth-child(6) .skill-icon-wrap { background: color-mix(in oklab, var(--warm) 30%, var(--cool)); color: #5a8a3a; }
+.skill-card:hover .skill-icon-wrap {
+  transform: scale(1.1) rotate(-5deg);
+}
+.skill-card h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+.skill-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.skill-tag {
+  font-size: 0.78rem;
+  padding: 0.4rem 0.9rem;
+  background: var(--bg);
+  border-radius: 100px;
+  color: var(--ink-soft);
+  font-weight: 500;
+  border: 1px solid var(--line);
+  transition: all 0.2s;
+}
+.skill-tag:hover {
+  background: var(--warm-weak);
+  border-color: var(--warm-mid);
+}
+
+/* ===== Experience Timeline ===== */
+.experience {
+  padding: calc(var(--space) * 3) 0;
+}
+.experience-header {
+  text-align: center;
+  margin-bottom: calc(var(--space) * 1.5);
+}
+.experience-header h2 {
+  font-size: var(--step-3);
+}
+.timeline {
+  position: relative;
+  max-width: 800px;
+  margin: 0 auto;
+}
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 24px;
+  top: 0; bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, var(--warm), var(--cool));
+  border-radius: 2px;
+}
+.timeline-item {
+  position: relative;
+  padding-left: 72px;
+  padding-bottom: 2.5rem;
+}
+.timeline-item:last-child { padding-bottom: 0; }
+.timeline-dot {
+  position: absolute;
+  left: 12px;
+  top: 4px;
+  width: 24px; height: 24px;
+  background: var(--surface);
+  border: 3px solid var(--warm-strong);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.timeline-dot .iconify { font-size: 0.7rem; color: var(--warm-strong); }
+.timeline-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.75rem;
+  box-shadow: var(--shadow-soft);
+  transition: all 0.3s;
+}
+.timeline-card:hover {
+  transform: translateX(6px);
+  box-shadow: var(--shadow-medium);
+}
+.timeline-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.timeline-card h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+.timeline-date {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--muted);
+  background: var(--bg);
+  padding: 0.35rem 0.85rem;
+  border-radius: 100px;
+}
+.timeline-company {
+  font-size: 0.95rem;
+  color: var(--muted);
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.timeline-desc {
+  font-size: 0.95rem;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+/* ===== Contact ===== */
+.contact {
+  padding: calc(var(--space) * 3) 0 calc(var(--space) * 1.5);
+  background: linear-gradient(180deg, transparent, var(--warm-weak));
+}
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: calc(var(--space) * 1.5);
+  align-items: start;
+}
+.contact-info h2 {
+  font-size: var(--step-3);
+  margin-bottom: 1rem;
+}
+.contact-info > p {
+  color: var(--muted);
+  margin-bottom: 2.5rem;
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+.contact-links {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.contact-link {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+  padding: 1.1rem 1.4rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.contact-link:hover {
+  border-color: var(--cool-strong);
+  background: var(--cool-weak);
+  transform: translateX(8px);
+  box-shadow: var(--shadow-soft);
+}
+.contact-link-icon {
+  width: 48px; height: 48px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--warm), var(--cool));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  color: var(--ink);
+  flex-shrink: 0;
+}
+.contact-link-text {
+  font-family: "Outfit", sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+}
+.contact-link-sub {
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+.contact-form-wrap {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem;
+  box-shadow: var(--shadow-soft);
+  border: 1px solid var(--line);
+}
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.form-group {
+  margin-bottom: 1.1rem;
+}
+.form-group label {
+  display: block;
+  font-family: "Outfit", sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--ink-soft);
+}
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 0.9rem 1.1rem;
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  font-family: "Inter", sans-serif;
+  font-size: 0.95rem;
+  background: var(--bg);
+  color: var(--ink);
+  transition: all 0.3s;
+}
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--cool-strong);
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--cool) 15%, transparent);
+}
+.form-group textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+/* ===== Footer ===== */
+.footer {
+  padding: 2.5rem 0;
+  text-align: center;
+  border-top: 1px solid var(--line);
+}
+.footer p {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+.footer a {
+  color: var(--ink);
+  font-weight: 600;
+  background: linear-gradient(90deg, var(--warm-strong), var(--cool-strong));
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* ===== Scroll Reveal ===== */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s cubic-bezier(0.4,0,0.2,1), transform 0.8s cubic-bezier(0.4,0,0.2,1);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
+  .hero .container { grid-template-columns: 1fr; text-align: center; }
+  .hero-badge { margin-left: auto; margin-right: auto; }
+  .hero-role { justify-content: center; }
+  .hero-desc { margin-left: auto; margin-right: auto; }
+  .hero-actions { justify-content: center; }
+  .hero-socials { justify-content: center; }
+  .hero-visual { order: -1; }
+  .hero-pfp-wrap { width: 240px; height: 240px; }
+  .hero-float-card { display: none; }
+  .about-grid,
+  .contact-grid { grid-template-columns: 1fr; }
+  .skills-grid { grid-template-columns: 1fr; }
+  .form-row { grid-template-columns: 1fr; }
+  .nav { display: none; }
+  .header-cta { display: none; }
+  .marquee-item { font-size: 0.85rem; }
+}
+
+@media (max-width: 480px) {
+  .hero-pfp-wrap { width: 200px; height: 200px; }
+  .about-stats-row { grid-template-columns: 1fr; }
+  .skills-grid { grid-template-columns: 1fr; }
+  .timeline::before { left: 14px; }
+  .timeline-item { padding-left: 50px; }
+  .timeline-dot { left: 2px; width: 20px; height: 20px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1; transform: none; }
+  .hero-blob, .hero-pfp-ring, .hero-pfp-ring2, .hero-float-card,
+  .marquee-track { animation: none; }
+}
+
+/* ===== Print ===== */
+@media print {
+  body { background: #fff; }
+  .header, .hero-blob, .marquee-section, .hero-pfp-ring, .hero-pfp-ring2,
+  .hero-float-card { display: none; }
+  .hero { min-height: auto; padding: 2rem 0; }
+}
+</style>
 </head>
 
 <body>
 
-  <!-- ═══ AMBIENT LAYERS ═══ -->
-  <div class="wallpaper">
-    <img class="wallpaper-img" id="wallImg" src="photo_2026-04-11_20-05-29.jpg" alt="" />
+<!-- Header -->
+<header class="header">
+  <div class="container">
+    <a href="#" class="logo">Yash<span class="logo-dot"></span></a>
+    <nav class="nav">
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#experience">Experience</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <a href="#contact" class="header-cta">
+      <span class="iconify" data-icon="heroicons:paper-airplane"></span>
+      Hire Me
+    </a>
   </div>
-  <div class="grid-overlay"></div>
-  <div class="particles"></div>
-  <div class="grain"></div>
-  <div class="vignette"></div>
-  <div class="cursor-glow"></div>
+</header>
 
-  <!-- Corner deco -->
-  <div class="ct tl">Zerobiz<br>Club</div>
-  <div class="ct tr">WL Open<br>2026</div>
-
-  <!-- Flash ring -->
-  <div class="flash-ring" id="flashRing"></div>
-
-  <div class="site-wrap">
-
-    <!-- ══ HERO / FORM ══ -->
-    <div class="hero">
-      <div style="width:100%;max-width:460px;display:flex;flex-direction:column;align-items:center;">
-
-        <!-- PAGE 1 — ACCESS GATE -->
-        <div class="page active" id="page1">
-          <div class="header">
-            <div class="logo-img-wrap">
-              <img class="logo-img" src="IMG_8157.png" alt="ZEROBIZ CLUB" />
-            </div>
-            <div class="subline">Allowlist applications are open</div>
-          </div>
-          <div class="card">
-            <div class="card-eyebrow">ACCESS GATE</div>
-            <div class="card-title">Enter the<br>club code.</div>
-            <div class="card-desc">For those paying attention. For the misfits only.</div>
-            <div class="field">
-              <label>ACCESS CODE</label>
-              <input id="pwInput" type="text" placeholder="········" autocomplete="off" spellcheck="false" />
-            </div>
-            <div class="err-msg" id="errMsg"></div>
-            <button class="btn" onclick="checkPw()">Unlock</button>
-          </div>
-        </div>
-
-        <!-- PAGE 2 — SOCIAL VERIFICATION -->
-        <div class="page" id="page2">
-          <div class="header">
-            <div class="logo-img-wrap">
-              <img class="logo-img" src="photo_2026-04-12_10-50-10.jpg" alt="ZEROBIZ CLUB" />
-            </div>
-            <div class="subline">For the misfits.</div>
-          </div>
-          <div class="card">
-            <div class="step-tag">STEP 1/3</div>
-            <div class="card-eyebrow">STEP 1</div>
-            <div class="card-title">Social<br>Verification</div>
-
-            <!-- Task rows -->
-            <div class="task-list">
-
-              <div class="task-item" id="taskItem1">
-                <div class="task-info">
-                  <div class="task-title-text">Follow @ZeroBoizClub</div>
-                  <div class="task-sub-text">Hit follow on our main account</div>
-                </div>
-                <button class="task-go-btn" id="taskBtn1" onclick="doTask(1, 'https://x.com/zeroboizclub?s=11')">
-                  <span class="go-label">go ↗</span>
-                  <span class="go-spinner"></span>
-                </button>
-              </div>
-
-              <div class="task-item" id="taskItem2">
-                <div class="task-info">
-                  <div class="task-title-text">Like, Comment &amp; RT the Tweet</div>
-                  <div class="task-sub-text">Engage with our pinned post</div>
-                </div>
-                <button class="task-go-btn" id="taskBtn2" onclick="doTask(2, 'https://x.com/zeroboizclub?s=11')">
-                  <span class="go-label">go ↗</span>
-                  <span class="go-spinner"></span>
-                </button>
-              </div>
-
-            </div>
-
-            <!-- Task count -->
-            <div class="task-count-row">
-              <span class="task-count-dots">
-                <span class="task-dot" id="dot1"></span>
-                <span class="task-dot" id="dot2"></span>
-              </span>
-              <span class="task-count-label" id="taskCountLabel">0/2 tasks completed</span>
-            </div>
-
-            <!-- Fit question -->
-            <div class="field" style="margin-top:4px;">
-              <label>QUOTE THE PINNED POST &amp; SUBMIT QUOTE LINK</label>
-              <input id="fitInput" type="text" placeholder="Drop quote link..." autocomplete="off" spellcheck="false" />
-            </div>
-
-            <div class="err-msg" id="socialErr"></div>
-            <button class="btn" onclick="nextToWl()">Continue</button>
-          </div>
-        </div>
-
-        <!-- PAGE 3 — WL APPLICATION -->
-        <div class="page" id="page3">
-          <div class="header">
-            <div class="logo-img-wrap">
-              <img class="logo-img" src="photo_2026-04-12_10-50-10.jpg" alt="ZEROBIZ CLUB" />
-            </div>
-            <div class="subline">For the misfits.</div>
-          </div>
-          <div class="card">
-            <div class="step-tag">STEP 2/3</div>
-            <div class="card-eyebrow">Allowlist</div>
-            <div class="card-title">WL<br>Application</div>
-            <div class="card-desc">Submit your X handle and Ethereum wallet below.<br>Applications are reviewed
-              manually.</div>
-            <div class="field">
-              <label>X Username</label>
-              <input id="xHandle" type="text" placeholder="@yourhandle" autocomplete="off" />
-            </div>
-            <div class="field">
-              <label>Ethereum Wallet Address</label>
-              <input id="wallet" type="text" placeholder="0x···" autocomplete="off" spellcheck="false" />
-            </div>
-            <div class="err-msg" id="formErr"></div>
-            <button class="btn" onclick="submitForm()">Submit Application</button>
-            <div class="divider"></div>
-            <div class="foot-note">
-              Applications will be strictly reviewed<br>
-              Winners will receive allowlist
-            </div>
-          </div>
-        </div>
-
-        <!-- PAGE 4 — REFERRAL -->
-        <div class="page" id="page4">
-          <div class="card referral-card" style="text-align:center;padding:40px 28px 36px;">
-            <div class="step-tag">STEP 3/3</div>
-            <span class="success-glyph">◎</span>
-            <div class="success-h">Application<br>Received.</div>
-            <div class="success-p" style="margin-bottom:28px;">
-              You're in. Share your link and bring more misfits.
-            </div>
-
-            <!-- Misfit Pass Card Image -->
-            <div class="misfit-pass-wrap">
-              <img class="misfit-pass-img" src="misfit-pass.jpg"
-                alt="Zero Boiz Misfit Pass" />
-            </div>
-
-            <!-- Referral Link -->
-            <div class="referral-link-wrap">
-              <div class="referral-label">YOUR REFERRAL LINK</div>
-              <div class="referral-link-box" id="referralLinkBox" onclick="copyReferralLink()">
-                <span id="referralLinkText">Loading...</span>
-                <span class="copy-icon" id="copyIcon">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="9" y="9" width="13" height="13" rx="2" />
-                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                  </svg>
-                </span>
-              </div>
-              <div class="copy-feedback" id="copyFeedback">Copied!</div>
-            </div>
-
-            <!-- Share on X -->
-            <button class="btn btn-x-share" id="shareXBtn" onclick="shareOnX()">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                <path
-                  d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.257 5.649 5.907-5.649zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-              </svg>
-              Share on X
-            </button>
-
-            <div class="divider"></div>
-            <div class="foot-note">ZEROBOIZ CLUB — NOT NORMAL. NEVER WAS.</div>
-          </div>
-        </div>
-
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-blob warm"></div>
+  <div class="hero-blob cool"></div>
+  <div class="hero-blob warm2"></div>
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="status-dot"></span>
+        Available for freelance work
+      </div>
+      <h1 class="hero-title">Hi, I'm<br><span class="gradient-text">Yash</span></h1>
+      <div class="hero-role">
+        <span class="role-divider"></span>
+        Full Stack Developer
+        <span class="iconify" data-icon="heroicons:code-bracket"></span>
+      </div>
+      <p class="hero-desc">Backend API Engineer specializing in REST APIs, WebSockets & Realtime Systems. I build scalable, reliable applications that perform under pressure.</p>
+      <div class="hero-actions">
+        <a href="#contact" class="btn btn-primary">
+          <span class="iconify" data-icon="heroicons:envelope"></span>
+          Get In Touch
+        </a>
+        <a href="https://github.com/iYashKun" target="_blank" class="btn btn-outline">
+          <span class="iconify" data-icon="mdi:github"></span>
+          GitHub
+        </a>
+      </div>
+      <div class="hero-socials">
+        <a href="https://github.com/iYashKun" target="_blank" class="social-btn" aria-label="GitHub">
+          <span class="iconify" data-icon="mdi:github"></span>
+        </a>
+        <a href="#" class="social-btn" aria-label="LinkedIn">
+          <span class="iconify" data-icon="mdi:linkedin"></span>
+        </a>
+        <a href="#" class="social-btn" aria-label="Twitter">
+          <span class="iconify" data-icon="mdi:twitter"></span>
+        </a>
+        <a href="/cdn-cgi/l/email-protection#b6cfd9c3c498d3dbd7dfdaf6d3ced7dbc6dad398d5d9db" class="social-btn" aria-label="Email">
+          <span class="iconify" data-icon="heroicons:envelope"></span>
+        </a>
       </div>
     </div>
-
-    <!-- ══ FAQ SECTION ══ -->
-    <div class="faq-section">
-      <div class="faq-label">F A Q</div>
-      <div class="faq-list">
-
-        <div class="faq-item">
-          <button class="faq-q" onclick="toggleFaq(this)">
-            What is ZEROBOIZ Club?
-            <span class="faq-chevron"><svg viewBox="0 0 24 24">
-                <polyline points="6 9 12 15 18 9" />
-              </svg></span>
-          </button>
-          <div class="faq-body">
-            <p>ZEROBOIZ Club is a collection of misfits, oddballs and anti-icons. Built around outsider energy, weird
-              charm and strong identity.</p>
-          </div>
+    <div class="hero-visual">
+      <div class="hero-pfp-wrap">
+        <div class="hero-pfp-ring"></div>
+        <div class="hero-pfp-ring2"></div>
+        <img src="https://avatars.githubusercontent.com/u/196802358?v=4" alt="Yash Profile Picture" class="hero-pfp">
+      </div>
+      <div class="hero-float-card fc1">
+        <div class="float-icon">
+          <span class="iconify" data-icon="heroicons:bolt"></span>
         </div>
-
-        <div class="faq-item">
-          <button class="faq-q" onclick="toggleFaq(this)">
-            What is the supply?
-            <span class="faq-chevron"><svg viewBox="0 0 24 24">
-                <polyline points="6 9 12 15 18 9" />
-              </svg></span>
-          </button>
-          <div class="faq-body">
-            <p>1,111 BOIZ.</p>
-          </div>
+        <span>Realtime Systems</span>
+      </div>
+      <div class="hero-float-card fc2">
+        <div class="float-icon">
+          <span class="iconify" data-icon="heroicons:server"></span>
         </div>
-
-        <div class="faq-item">
-          <button class="faq-q" onclick="toggleFaq(this)">
-            How do I get on the allowlist?
-            <span class="faq-chevron"><svg viewBox="0 0 24 24">
-                <polyline points="6 9 12 15 18 9" />
-              </svg></span>
-          </button>
-          <div class="faq-body">
-            <p>Follow ZeroBoiz for allowlist opportunities and updates.</p>
-          </div>
+        <span>Scalable APIs</span>
+      </div>
+      <div class="hero-float-card fc3">
+        <div class="float-icon">
+          <span class="iconify" data-icon="heroicons:command-line"></span>
         </div>
-
-        <div class="faq-item">
-          <button class="faq-q" onclick="toggleFaq(this)">
-            What chain is ZEROBOIZ on?
-            <span class="faq-chevron"><svg viewBox="0 0 24 24">
-                <polyline points="6 9 12 15 18 9" />
-              </svg></span>
-          </button>
-          <div class="faq-body">
-            <p>Ethereum.</p>
-          </div>
-        </div>
-
-        <div class="faq-item">
-          <button class="faq-q" onclick="toggleFaq(this)">
-            When is the mint?
-            <span class="faq-chevron"><svg viewBox="0 0 24 24">
-                <polyline points="6 9 12 15 18 9" />
-              </svg></span>
-          </button>
-          <div class="faq-body">
-            <p>Mint date will be announced soon.</p>
-          </div>
-        </div>
-
-        <div class="faq-item">
-          <button class="faq-q" onclick="toggleFaq(this)">
-            How do I stay updated?
-            <span class="faq-chevron"><svg viewBox="0 0 24 24">
-                <polyline points="6 9 12 15 18 9" />
-              </svg></span>
-          </button>
-          <div class="faq-body">
-            <p>Follow ZeroBoiz and stay locked in for announcements.</p>
-          </div>
-        </div>
-
+        <span>Automation</span>
       </div>
     </div>
-
-    <!-- ══ FOOTER ══ -->
-    <footer class="site-footer">
-      <div class="footer-logo">ZEROBOIZ CLUB</div>
-    </footer>
-
   </div>
+</section>
 
-  <script src="https://zeroboiz.club/app.js"></script>
+<!-- Marquee -->
+<section class="marquee-section">
+  <div class="marquee-track">
+    <div class="marquee-item"><span class="iconify" data-icon="logos:javascript"></span> JavaScript</div>
+    <div class="marquee-item"><span class="iconify" data-icon="logos:typescript-icon"></span> TypeScript</div>
+    <div class="marquee-item"><span class="iconify" data-icon="logos:nodejs-icon"></span> Node.js</div>
+    <div class="marquee-item"><span class="iconify" data-icon="simple-icons:express"></span> Express</div>
+    <div class="marquee-item"><span class="iconify" data-icon="logos:react"></span> React</div>
+    <div class="marquee-item"><span class="iconify" data-icon="logos:nextjs-icon"></span> Next.js</div>
+    <div class="marquee-item"><span class="iconify" data-icon="logos:mongodb-icon"></span> MongoDB</div>
+    <div class="marquee-item"><span class="iconify" data-icon="logos:mysql-icon"></span> MySQL</div>
+    <div class="marquee-item"><span class="iconify" data-icon="logos:redis"></span> Redis</div>
+    <div class="marquee-item"><span class="iconify" data-icon="logos:docker-icon"></span> Docker</div>
+    <div class="marquee-item"><span class="iconify" data-icon="logos:git-icon"></span> Git</div>
+    <div class="marquee-item"><span class="iconify" data-icon="logos:linux-tux"></span> Linux</div>
+    <!-- duplicate for seamless loop -->
+    <div class="marquee-item"><span class="iconify" data-icon="logos:javascript"></span> JavaScript</div>
+    <div class="marquee-item"><span class="iconify" data-icon="logos:typescript-icon"></span> TypeScript</div>
+    <div class="marquee-item"><span class="iconify" data-icon="logos:nodejs-icon"></span> Node.js</div>
+    <div class="marquee-item"><span class="iconify" data-icon="simple-icons:express"></span> Express</div>
+    <div class="marquee-item"><span class="iconify" data-icon="logos:react"></span> React</div>
+    <div class="marquee-item"><span class="iconify" data-icon="logos:nextjs-icon"></span> Next.js</div>
+    <div class="marquee-item"><span class="iconify" data-icon="logos:mongodb-icon"></span> MongoDB</div>
+    <div class="marquee-item"><span class="iconify" data-icon="logos:mysql-icon"></span> MySQL</div>
+    <div class="marquee-item"><span class="iconify" data-icon="logos:redis"></span> Redis</div>
+    <div class="marquee-item"><span class="iconify" data-icon="logos:docker-icon"></span> Docker</div>
+    <div class="marquee-item"><span class="iconify" data-icon="logos:git-icon"></span> Git</div>
+    <div class="marquee-item"><span class="iconify" data-icon="logos:linux-tux"></span> Linux</div>
+  </div>
+</section>
+
+<!-- About -->
+<section class="about" id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-content reveal">
+        <p class="section-label">About Me</p>
+        <h2>Building digital<br><span class="gradient-text">experiences</span> that matter.</h2>
+        <p>I am a Full Stack Developer with deep expertise in backend architecture and realtime systems. I design robust APIs, implement WebSocket communication for live data streaming, and automate workflows to improve efficiency.</p>
+        <p>My philosophy is simple: first make it work, then make it fast, then make it beautiful. Clean code, scalable systems, and reliable performance are what I strive for in every project.</p>
+        <div class="about-quote">
+          <p>"First make it work. Then make it fast. Then make it beautiful."</p>
+        </div>
+      </div>
+      <div class="about-visual reveal reveal-delay-2">
+        <div class="about-card">
+          <div class="about-card-header">
+            <img src="https://avatars.githubusercontent.com/u/196802358?v=4" alt="Yash" class="about-card-avatar">
+            <div class="about-card-info">
+              <h4>Yash</h4>
+              <p>Full Stack Developer</p>
+            </div>
+          </div>
+          <div class="about-stats-row">
+            <div class="about-stat-item">
+              <div class="stat-icon"><span class="iconify" data-icon="heroicons:clock"></span></div>
+              <div class="stat-num">3+</div>
+              <div class="stat-desc">Years Experience</div>
+            </div>
+            <div class="about-stat-item">
+              <div class="stat-icon"><span class="iconify" data-icon="heroicons:code-bracket"></span></div>
+              <div class="stat-num">20+</div>
+              <div class="stat-desc">Projects Built</div>
+            </div>
+            <div class="about-stat-item">
+              <div class="stat-icon"><span class="iconify" data-icon="heroicons:bolt"></span></div>
+              <div class="stat-num">50+</div>
+              <div class="stat-desc">APIs Designed</div>
+            </div>
+            <div class="about-stat-item">
+              <div class="stat-icon"><span class="iconify" data-icon="heroicons:heart"></span></div>
+              <div class="stat-num">99%</div>
+              <div class="stat-desc">Client Satisfaction</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Skills -->
+<section class="skills" id="skills">
+  <div class="container">
+    <div class="skills-header reveal">
+      <p class="section-label">Expertise</p>
+      <h2>Skills & Technologies</h2>
+      <p>Tools and technologies I use to bring ideas to life.</p>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-card reveal reveal-delay-1">
+        <div class="skill-card-header">
+          <div class="skill-icon-wrap"><span class="iconify" data-icon="heroicons:code-bracket-20-solid"></span></div>
+          <h3>Languages</h3>
+        </div>
+        <div class="skill-tags">
+          <span class="skill-tag">JavaScript</span>
+          <span class="skill-tag">TypeScript</span>
+          <span class="skill-tag">Node.js</span>
+          <span class="skill-tag">HTML5</span>
+          <span class="skill-tag">CSS3</span>
+          <span class="skill-tag">Bash</span>
+        </div>
+      </div>
+      <div class="skill-card reveal reveal-delay-2">
+        <div class="skill-card-header">
+          <div class="skill-icon-wrap"><span class="iconify" data-icon="heroicons:server-20-solid"></span></div>
+          <h3>Backend & Database</h3>
+        </div>
+        <div class="skill-tags">
+          <span class="skill-tag">Node.js</span>
+          <span class="skill-tag">Express</span>
+          <span class="skill-tag">FastAPI</span>
+          <span class="skill-tag">MongoDB</span>
+          <span class="skill-tag">MySQL</span>
+          <span class="skill-tag">Redis</span>
+        </div>
+      </div>
+      <div class="skill-card reveal reveal-delay-3">
+        <div class="skill-card-header">
+          <div class="skill-icon-wrap"><span class="iconify" data-icon="heroicons:computer-desktop-20-solid"></span></div>
+          <h3>Frontend & Frameworks</h3>
+        </div>
+        <div class="skill-tags">
+          <span class="skill-tag">React</span>
+          <span class="skill-tag">Next.js</span>
+          <span class="skill-tag">Vite</span>
+        </div>
+      </div>
+      <div class="skill-card reveal reveal-delay-1">
+        <div class="skill-card-header">
+          <div class="skill-icon-wrap"><span class="iconify" data-icon="heroicons:bolt-20-solid"></span></div>
+          <h3>Realtime & APIs</h3>
+        </div>
+        <div class="skill-tags">
+          <span class="skill-tag">WebSockets</span>
+          <span class="skill-tag">Socket.io</span>
+          <span class="skill-tag">REST APIs</span>
+          <span class="skill-tag">GraphQL</span>
+          <span class="skill-tag">Event-Driven</span>
+        </div>
+      </div>
+      <div class="skill-card reveal reveal-delay-2">
+        <div class="skill-card-header">
+          <div class="skill-icon-wrap"><span class="iconify" data-icon="heroicons:wrench-screwdriver-20-solid"></span></div>
+          <h3>DevOps & Tools</h3>
+        </div>
+        <div class="skill-tags">
+          <span class="skill-tag">Git</span>
+          <span class="skill-tag">GitHub</span>
+          <span class="skill-tag">Docker</span>
+          <span class="skill-tag">Linux</span>
+          <span class="skill-tag">VS Code</span>
+          <span class="skill-tag">Postman</span>
+        </div>
+      </div>
+      <div class="skill-card reveal reveal-delay-3">
+        <div class="skill-card-header">
+          <div class="skill-icon-wrap"><span class="iconify" data-icon="heroicons:arrow-path-20-solid"></span></div>
+          <h3>Automation</h3>
+        </div>
+        <div class="skill-tags">
+          <span class="skill-tag">CI/CD</span>
+          <span class="skill-tag">Scripts</span>
+          <span class="skill-tag">Pipelines</span>
+          <span class="skill-tag">Cron Jobs</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Experience -->
+<section class="experience" id="experience">
+  <div class="container">
+    <div class="experience-header reveal">
+      <p class="section-label" style="justify-content:center;">Experience</p>
+      <h2>Work Experience</h2>
+    </div>
+    <div class="timeline">
+      <div class="timeline-item reveal">
+        <div class="timeline-dot"><span class="iconify" data-icon="heroicons:briefcase-20-solid"></span></div>
+        <div class="timeline-card">
+          <div class="timeline-card-header">
+            <h3>Full Stack Developer</h3>
+            <span class="timeline-date">
+              <span class="iconify" data-icon="heroicons:calendar"></span>
+              2023 - Present
+            </span>
+          </div>
+          <p class="timeline-company">
+            <span class="iconify" data-icon="heroicons:building-office-2"></span>
+            Freelance / Self Employed
+          </p>
+          <p class="timeline-desc">Building scalable web applications, designing REST APIs, implementing WebSocket-based realtime features, and automating deployment pipelines for clients across various industries.</p>
+        </div>
+      </div>
+      <div class="timeline-item reveal reveal-delay-2">
+        <div class="timeline-dot"><span class="iconify" data-icon="heroicons:code-bracket-20-solid"></span></div>
+        <div class="timeline-card">
+          <div class="timeline-card-header">
+            <h3>Backend Developer</h3>
+            <span class="timeline-date">
+              <span class="iconify" data-icon="heroicons:calendar"></span>
+              2022 - 2023
+            </span>
+          </div>
+          <p class="timeline-company">
+            <span class="iconify" data-icon="heroicons:building-office-2"></span>
+            Startup / Tech Company
+          </p>
+          <p class="timeline-desc">Developed and maintained backend services using Node.js and Express. Built realtime notification systems with Redis and Socket.io. Optimized database queries and API response times.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section class="contact" id="contact">
+  <div class="container">
+    <div class="contact-grid">
+      <div class="contact-info reveal">
+        <p class="section-label">Contact</p>
+        <h2>Let's build<br>something <span class="gradient-text">amazing</span> together.</h2>
+        <p>Have a project in mind? I'm always open to discussing new ideas, creative opportunities, or collaborations. Drop me a message and I'll get back to you.</p>
+        <div class="contact-links">
+          <a href="https://github.com/iYashKun" target="_blank" class="contact-link">
+            <div class="contact-link-icon"><span class="iconify" data-icon="mdi:github"></span></div>
+            <div>
+              <div class="contact-link-text">GitHub</div>
+              <div class="contact-link-sub">github.com/iYashKun</div>
+            </div>
+          </a>
+          <a href="#" class="contact-link">
+            <div class="contact-link-icon"><span class="iconify" data-icon="mdi:linkedin"></span></div>
+            <div>
+              <div class="contact-link-text">LinkedIn</div>
+              <div class="contact-link-sub">Connect professionally</div>
+            </div>
+          </a>
+          <a href="/cdn-cgi/l/email-protection#e59c8a9097cb8088848c89a5809d8488958980cb868a88" class="contact-link">
+            <div class="contact-link-icon"><span class="iconify" data-icon="heroicons:envelope"></span></div>
+            <div>
+              <div class="contact-link-text">Email</div>
+              <div class="contact-link-sub"><span class="__cf_email__" data-cfemail="98e1f7edeab6fdf5f9f1f4d8fde0f9f5e8f4fdb6fbf7f5">[email&#160;protected]</span></div>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="contact-form-wrap reveal reveal-delay-2">
+        <form onsubmit="event.preventDefault(); alert('Message sent! I will get back to you soon.');">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" id="name" placeholder="John Doe" required>
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" placeholder="john@example.com" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="subject">Subject</label>
+            <input type="text" id="subject" placeholder="Project inquiry" required>
+          </div>
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" placeholder="Tell me about your project..." required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width:100%;">
+            <span class="iconify" data-icon="heroicons:paper-airplane"></span>
+            Send Message
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <p>Built with passion by <a href="https://github.com/iYashKun">Yash</a> using pure HTML, CSS & Iconify</p>
+  </div>
+</footer>
+
+<!-- Scroll Reveal Script -->
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Active nav link on scroll
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav a');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(section => {
+    const sectionTop = section.offsetTop;
+    if (scrollY >= sectionTop - 200) current = section.getAttribute('id');
+  });
+  navLinks.forEach(link => {
+    link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+  });
+});
+</script>
+
 </body>
-
 </html>
